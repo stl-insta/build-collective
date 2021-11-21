@@ -13,9 +13,12 @@ contract CompanyFactory is BuildCollective {
 
     Company[] private companies;
 
+    event NewCompany(uint companyId, string name);
+
     function createCompany(string memory _name) public returns (bool) {
         uint id = companies.push(Company(_name)) - 1;
         companyToOwner[id]= msg.sender;
+        emit NewCompany(id, _name);
         return true;
     }
 
