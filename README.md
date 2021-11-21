@@ -88,3 +88,9 @@ Implement an OpenCollective from scratch in Solidity.
 - Create a page to open an entreprise account.
 - Create a page to create a project.
 - Create a page to get a full recap of everything that happened on a project as a timeline.
+- Project details page
+    - Contribute to a project
+    - Pay contributors (only owner)
+    - Create bounty (only owner)
+    - Accept a fix (only owner)
+    - Propose a fix
