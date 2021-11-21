@@ -22,6 +22,7 @@ contract BuildCollective is Ownable {
     require(bytes(username).length > 0);
     users[msg.sender] = User(username, 0, true);
     emit UserSignedUp(msg.sender, users[msg.sender]);
+    return users[msg.sender];
   }
 
   function addBalance(uint256 amount) public returns (bool) {
