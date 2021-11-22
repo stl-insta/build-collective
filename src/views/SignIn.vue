@@ -9,6 +9,14 @@
       <collective-button :transparent="true" @click="connect">
         Connect
       </collective-button>
+      <!-- <hr style="border: 1px solid rgb(57 53 132)" />
+      <collective-button
+        class="border-b"
+        :transparent="true"
+        @click="connectCompany"
+      >
+        Connect with an Company Account
+      </collective-button> -->
     </card>
     <card title="You're connected!" subtitle="Hooray" :blue="true" v-else>
       <collective-button :transparent="true" @click="goToAccount">
@@ -17,6 +25,9 @@
     </card>
     <spacer :size="24" />
     <div class="home">
+      <card title="Open Company Account" subtitle="Attach to Company">
+        <router-link to="/company" class="card-body">Go it</router-link>
+      </card>
       <card
         v-for="(link, index) in links"
         :key="index"
