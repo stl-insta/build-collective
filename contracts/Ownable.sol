@@ -7,4 +7,9 @@ contract Ownable {
     require(msg.sender == owner, "Function restricted to contracts’s owner");
     _;
   }
+
+  modifier onlyOwner(uint _itemId, mapping (uint => address) memory _itemToOwnerList) {
+    require(_itemToOwnerList[_itemId] == owner);
+    _;
+  }
 }

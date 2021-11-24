@@ -1,21 +1,22 @@
 const Company = artifacts.require("CompanyFactory");
 
 contract("Company", (accounts) => {
-    let company;
+    let companyFactory;
+    let owner = accounts[0];
+    let user = accounts[1];
 
     before(async () => {
-        company = await Company.deployed();
+        companyFactory = await Company.deployed();
+        await companyFactory.createCompany("SpaceX");
     });
 
-    describe('creating a company', async () => {
-        it('can create a company', async () => {
-            const isCreated = await company.createCompany("SpaceX");
+    it('can create a companyFactory', async () => {
+        const companies = await companyFactory.getCompanies();
+        assert.equal(companies[0].name, "SpaceX");
+    });
 
-            const companies = await company.getCompanies();
-
-            assert.equal(companies[0].name, "SpaceX");
-            assert.isOk(isCreated);
-        });
+    it('User can add itself as a member to a companyFactory', async () => {
+        await companyFactory.addMember(0, 0);
     })
 
 });
