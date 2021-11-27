@@ -30,4 +30,20 @@ contract BuildCollective is Ownable {
     users[msg.sender].balance += amount;
     return true;
   }
+
+  function substractBalance(uint256 _amount) public returns (bool) {
+    require(users[msg.sender].registered);
+    users[msg.sender].balance -= _amount;
+    return true;
+  }
+
+  modifier hasSold(uint _amount) {
+    require(user(msg.sender).balance >= _amount, "Not enough balance");
+    _;
+  }
+
+  modifier isRegistered(address _user) {
+    require(user(_user).registered, "User not registered");
+    _;
+  }
 }
