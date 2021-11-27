@@ -49,8 +49,8 @@ export default defineComponent({
     const store = useStore()
     const address = computed(() => store.state.account.address)
     const balance = computed(() => store.state.account.balance)
-    const contract = computed(() => store.state.contract)
-    return { address, contract, balance }
+    const contracts = computed(() => store.state.contracts)
+    return { address, contracts, balance }
   },
   data() {
     const account = null
@@ -59,25 +59,25 @@ export default defineComponent({
   },
   methods: {
     async updateAccount() {
-      const { address, contract } = this
-      this.account = await contract.methods.user(address).call()
+      const { address, contracts } = this
+      this.account = await contracts.BuildCollective.methods.user(address).call()
     },
     async signUp() {
-      const { contract, username } = this
+      const { contracts, username } = this
       const name = username.trim().replace(/ /g, '_')
-      await contract.methods.signUp(name).send()
+      await contracts.BuildCollective.methods.signUp(name).send()
       await this.updateAccount()
       this.username = ''
     },
     async addTokens() {
-      const { contract } = this
-      await contract.methods.addBalance(200).send()
+      const { contracts } = this
+      await contracts.BuildCollective.methods.addBalance(200).send()
       await this.updateAccount()
     },
   },
   async mounted() {
-    const { address, contract } = this
-    const account = await contract.methods.user(address).call()
+    const { address, contracts } = this
+    const account = await contracts.BuildCollective.methods.user(address).call()
     if (account.registered) this.account = account
   },
 })

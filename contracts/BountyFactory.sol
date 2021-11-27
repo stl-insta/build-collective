@@ -7,8 +7,8 @@ contract BountyFactory is ProjectFactory {
     Bounty[] public bounties;
     Fix[] public fixes;
 
-    mapping (uint => uint) private fixToBounty;
-    mapping (uint => uint) private bountyToProject;
+    mapping(uint => uint) private fixToBounty;
+    mapping(uint => uint) private bountyToProject;
 
     event NewBounty(uint id, string name, uint reward, BountyStatus status);
     event NewFix(uint id, string proposition);
@@ -29,11 +29,8 @@ contract BountyFactory is ProjectFactory {
         string proposition;
     }
 
-    function createBounty(
-        uint _projectId,
-        string memory _name,
-        uint _reward
-    ) external
+    function createBounty(uint _projectId, string calldata _name, uint _reward)
+    external
     {
         // Project has balance
         require(projects[_projectId].balance >= _reward);
@@ -48,7 +45,7 @@ contract BountyFactory is ProjectFactory {
         emit NewBounty(id, _name, _reward, BountyStatus.InProgress);
     }
 
-    function createFix(uint _bountyId, string memory _proposition)
+    function createFix(uint _bountyId, string calldata _proposition)
     external {
         fixes.push(Fix(msg.sender, _proposition));
         uint id = fixes.length;
