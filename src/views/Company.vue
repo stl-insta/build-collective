@@ -32,7 +32,7 @@
               </label>
             </li>
           </ul>
-          <p>Selected: {{ users }}</p>
+          <p>Selected members: {{ users }}</p>
         </div>
         <spacer :size="24" />
         <div class="center">
@@ -41,6 +41,10 @@
         <spacer :size="24" />
       </Card>
     </form>
+
+    <div v-for="company in companies" v-bind:key="company.id">
+      <div>Name: {{ company.name }}</div>
+    </div>
   </div>
 </template>
 
@@ -56,33 +60,36 @@ export default defineComponent({
     const store = useStore()
     const address = computed(() => store.state.account.address)
     const balance = computed(() => store.state.account.balance)
-    const contracts = computed(() => store.state.contracts)
-    return { address, contracts, balance }
+    const contract = computed(() => store.state.contract)
+    return { address, contract, balance }
   },
   data() {
     const account = null
     const name = ""
     const companyBalance = 0
     const users = Array<string>()
-    return { account, name, companyBalance, users }
+    const companies = Array<string>()
+    return { account, name, companyBalance, users, companies }
   },
   methods: {
     async updateUsers() {
-      const { contracts } = this
-      this.users = await contracts.BuildCollective.methods.getAllUsers().call()
+      const { contract } = this
+      this.users = await contract.methods.getAllUsers().call()
+      this.companies = await contract.methods.getCompanies().call()
     },
     async create() {
-      const { contracts, name } = this
-      await contracts.CompanyFactory.methods.createCompany(name).send()
+      const { contract, name } = this
+      await contract.methods.createCompany(name).send()
       await this.updateUsers()
       this.name = ""
     },
   },
   async mounted() {
-    const { address, contracts } = this
-    const account = await contracts.BuildCollective.methods.user(address).call()
+    const { address, contract } = this
+    const account = await contract.methods.user(address).call()
     if (account.registered) this.account = account
-    this.users = await contracts.BuildCollective.methods.getAllUsers().call()
+    this.users = await contract.methods.getAllUsers().call()
+    this.companies = await contract.methods.getCompanies().call()
   },
 })
 </script>
