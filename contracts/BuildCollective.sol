@@ -59,6 +59,7 @@ contract BuildCollective is Ownable {
     event NewContributor(uint contributorId, address user);
 
     struct Project {
+        uint id;
         string name;
         uint balance;
         address owner;
@@ -68,8 +69,8 @@ contract BuildCollective is Ownable {
     function createProject(string memory _name)
     public
     {
-        projects.push(Project(_name, 0, msg.sender, true));
-        uint id = projects.length - 1;
+        uint id = projects.length;
+        projects.push(Project(id, _name, 0, msg.sender, true));
         emit NewProject(id, _name, 0);
     }
 

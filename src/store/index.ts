@@ -3,25 +3,25 @@ import * as Ethereum from '../services/ethereum'
 
 export default createStore({
   state: {
-    contracts: {},
+    contract: null,
     account: {
       address: null,
       balance: 0,
     },
   },
   mutations: {
-    updateEthereum(state, { address, contracts, balance }) {
+    updateEthereum(state, { address, contract, balance }) {
       state.account.address = address
       state.account.balance = balance
-      state.contracts = contracts
+      state.contract = contract
     },
   },
   actions: {
     async ethereumConnect(context) {
       const response = await Ethereum.connect()
       if (response) {
-        const { address, contracts, balance } = response
-        context.commit('updateEthereum', { address, contracts, balance })
+        const { address, contract, balance } = response
+        context.commit('updateEthereum', { address, contract, balance })
       }
     },
   },
