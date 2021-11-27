@@ -1,15 +1,16 @@
 pragma solidity >=0.4.22 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./BuildCollective.sol";
+import "./ProjectFactory.sol";
 
-contract BountyFactory is BuildCollective {
-    mapping(uint => uint) private bountyToProject;
-    mapping(uint => uint) private fixToBounty;
-    Bounty[] private bounties;
-    Fix[] private fixes;
+contract BountyFactory is ProjectFactory {
+    Bounty[] public bounties;
+    Fix[] public fixes;
 
-    event NewBounty(uint id, string name, string description, uint reward, BountyStatus status);
+    mapping (uint => uint) private fixToBounty;
+    mapping (uint => uint) private bountyToProject;
+
+    event NewBounty(uint id, string name, uint reward, BountyStatus status);
     event NewFix(uint id, string proposition);
 
     enum BountyStatus {
@@ -19,27 +20,59 @@ contract BountyFactory is BuildCollective {
 
     struct Bounty {
         string name;
-        string description;
         uint reward;
         BountyStatus status;
     }
 
     struct Fix {
-        address user;
+        address owner;
         string proposition;
     }
 
-    function _createBounty(
+    function createBounty(
+        uint _projectId,
         string memory _name,
-        string memory _description,
         uint _reward
-    ) public {
-        uint id = bounties.push(Bounty(_name, _description, _reward, BountyStatus.InProgress)) - 1;
-        emit NewBounty(id, _name, _description, _reward, BountyStatus.InProgress);
+    ) external
+    {
+        // Project has balance
+        require(projects[_projectId].balance >= _reward);
+
+        projects[_projectId].balance -= _reward;
+
+        bounties.push(Bounty(_name, _reward, BountyStatus.InProgress));
+        uint id = bounties.length - 1;
+
+        bountyToProject[id] = _projectId;
+
+        emit NewBounty(id, _name, _reward, BountyStatus.InProgress);
     }
 
-    function _createFix(string memory _proposition) public {
-        uint id = fixes.push(Fix(msg.sender, _proposition)) - 1;
+    function createFix(uint _bountyId, string memory _proposition)
+    external {
+        fixes.push(Fix(msg.sender, _proposition));
+        uint id = fixes.length;
+
+        fixToBounty[id] = _bountyId;
+
         emit NewFix(id, _proposition);
+    }
+
+    function acceptFix(uint _fixId)
+    external {
+        uint bountyId = fixToBounty[_fixId];
+        uint projectId = bountyToProject[bountyId];
+
+        // Only project owner
+        require(projects[projectId].owner == msg.sender);
+
+        // Active project
+        require(projects[projectId].active);
+
+        // InProgress Bounty
+        require(bounties[bountyId].status == BountyStatus.InProgress);
+
+        users[fixes[_fixId].owner].balance += bounties[bountyId].reward;
+        bounties[bountyId].status = BountyStatus.Fixed;
     }
 }

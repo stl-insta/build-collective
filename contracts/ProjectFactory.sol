@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0
+
 pragma solidity >=0.4.22 <0.9.0;
 pragma experimental ABIEncoderV2;
 
@@ -7,7 +9,7 @@ import "./BuildCollective.sol";
 contract ProjectFactory is BuildCollective {
     mapping (uint => address[]) public projectToContributors;
 
-    Project[] private projects;
+    Project[] public projects;
 
     event NewProject(uint projectId, string name, uint balance);
     event NewSponsor(uint projectId, uint amount);

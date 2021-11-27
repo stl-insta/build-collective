@@ -10,7 +10,7 @@ contract BuildCollective is Ownable {
     bool registered;
   }
 
-  mapping(address => User) private users;
+  mapping(address => User) public users;
 
   event UserSignedUp(address indexed userAddress, User indexed user);
 
