@@ -31,7 +31,7 @@ contract BuildCollective is Ownable {
     return true;
   }
 
-  function substractBalance(uint256 _amount) public returns (bool) {
+  function withdrawBalance(uint256 _amount) public returns (bool) {
     require(users[msg.sender].registered);
     users[msg.sender].balance -= _amount;
     return true;

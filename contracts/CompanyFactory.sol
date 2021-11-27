@@ -4,33 +4,45 @@ pragma experimental ABIEncoderV2;
 import "./BuildCollective.sol";
 
 contract CompanyFactory is BuildCollective {
+    mapping(uint => address[]) companyToMembers;
+
     struct Company {
         string name;
+        address owner;
     }
-
-    mapping(uint => uint) private memberToCompany;
-    mapping(uint => address) private companyToOwner;
 
     Company[] private companies;
 
     event NewCompany(uint companyId, string name);
-    event NewCompanyMember(uint userId, uint companyId);
+    event NewCompanyMember(uint companyId, address user);
 
-    function createCompany(string memory _name) public returns (bool) {
-        uint id = companies.push(Company(_name)) - 1;
-        companyToOwner[id] = msg.sender;
+    function createCompany(string memory _name) 
+    public 
+    {
+        companies.push(Company(_name, msg.sender));
+        uint id = companies.length - 1;
+
         emit NewCompany(id, _name);
-        return true;
     }
 
-    function getCompanies() external view returns (Company[] memory) {
+    function getCompanies() 
+    external view 
+    returns (Company[] memory) 
+    {
         return companies;
     }
 
-    function addMember(uint _userId, uint _companyId) onlyOwner(_companyId, companyToOwner) external returns (bool) {
-        // Check if the owner is trying to add himself as a member
-        memberToCompany[_userId] = _companyId;
-        emit NewCompanyMember(_userId, _companyId);
-        return true;
+    function getCompanyMember(uint _companyId)
+    external view
+    returns (address[] memory)
+    {
+        return companyToMembers[_companyId];
+    }
+
+    function addMember(uint _companyId, address _user)
+    public
+    {
+        companyToMembers[_companyId].push(_user);
+        emit NewCompanyMember(_companyId, _user);
     }
 }

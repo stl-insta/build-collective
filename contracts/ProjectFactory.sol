@@ -5,11 +5,9 @@ import "./BuildCollective.sol";
 
 
 contract ProjectFactory is BuildCollective {
-    mapping (uint => mapping(uint => address)) public projectToContributors;
-    mapping (uint => User) public projectToUser;
+    mapping (uint => address[]) public projectToContributors;
 
-    Project[] public projects;
-    User[] public contributors;
+    Project[] private projects;
 
     event NewProject(uint projectId, string name, uint balance);
     event NewSponsor(uint projectId, uint amount);
@@ -22,21 +20,16 @@ contract ProjectFactory is BuildCollective {
         bool active;
     }
 
-    function createProject(
-        string memory _name
-    ) public {
+    function createProject(string memory _name) 
+    public 
+    {
         projects.push(Project(_name, 0, msg.sender, true));
-
         uint id = projects.length - 1;
-        projectToUser[id] = user(msg.sender);
-
         emit NewProject(id, _name, 0);
     }
 
 
-    function sponsorProject(
-        uint _id, uint _amount
-    )
+    function sponsorProject(uint _id, uint _amount)
     public
     hasSold(_amount)
     isRegistered(msg.sender)
@@ -45,24 +38,36 @@ contract ProjectFactory is BuildCollective {
         require(projects[_id].active);
 
         projects[_id].balance += _amount;
-        substractBalance(_amount);
+        withdrawBalance(_amount);
 
         emit NewSponsor(_id, _amount);
     }
 
-    function addContributor(
-        uint _id, address _user
-    )
+    function addContributor(uint _projectId, address _user)
     public
-    isActive(_id)
+    isActive(_projectId)
     isRegistered(_user)
     {
-        contributors.push(user(_user));
-        uint id = contributors.length - 1;
+        projectToContributors[_projectId].push(_user);
+        emit NewContributor(_projectId, _user);
+    }
 
-        projectToContributors[_id][id] = _user;
+    function getProject(uint id) 
+    external view 
+    returns (Project memory) {
+        return projects[id];
+    }
 
-        emit NewContributor(id, _user);
+    function getProjects() 
+    external view 
+    returns (Project[] memory) {
+        return projects;
+    }
+
+    function getProjectContributors(uint _projectId) 
+    external view
+    returns (address[] memory){
+        return projectToContributors[_projectId];
     }
 
     modifier isActive(uint _id) {
