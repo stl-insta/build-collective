@@ -16,51 +16,52 @@
           v-model="name"
           placeholder="Type your company name here"
         />
-        <!-- <label for="owner">Company owner</label>
-        <select class="select" id="owner" v-model="selectedOwner">
-          <option value="" disabled>Select an owner</option>
-          <option :key="index" v-for="(owner, index) in users" selectedOwner>
-            {{ owner }}
-          </option>
-        </select> -->
-        <p>Selected: {{ selectedOwner }}</p>
-        <label for="member">List of members</label>
-        <select class="select" id="member" v-model="selectedMembers">
-          <option selectedMembers>A</option>
-          <option>B</option>
-          <option>C</option>
-        </select>
-        <p>Selected: {{ selectedMembers }}</p>
-        <label for="owner">List of projects</label>
-        <select class="select" id="owner" v-model="selectedProjects">
-          <option selectedProjects>A</option>
-          <option>B</option>
-          <option>C</option>
-        </select>
-        <p>Selected: {{ selectedProjects }}</p>
+        <label for="balance">Balance</label>
+        <input
+          type="number"
+          class="input"
+          id="balance"
+          v-model="balance"
+          placeholder="Type your balance here (only number)"
+        />
+        <!-- <label for="members">List of members</label>
+        <div id="members" :key="index" v-for="(member, index) in members">
+          <input
+            type="checkbox"
+            id="member"
+            value="member"
+            v-model="selectedMembers"
+          />
+          <label for="member">{{ member }}</label>
+        </div>
+        <p>Selected: {{ selectedMembers }}</p> -->
+        <CheckboxContainer :items="members" @update="updateMembers" />
+        <p>Selected: {{ members }}</p>
       </Card>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-// import { defineComponent, computed } from 'vue'
-// import { useStore } from 'vuex'
+import { defineComponent, computed } from 'vue'
+import { useStore, mapState, mapActions } from 'vuex'
 import Card from '@/components/Card.vue'
 import Spacer from '@/components/Spacer.vue'
+import CheckboxContainer from '@/components/CheckboxContainer.vue'
 
 export default defineComponent({
-  components: { Card, Spacer },
-  // setup() {},
-  // data() {
-  //   const users = ['wlin', 'mamy', 'prof']
-  //   const selectedOwner = ''
-  // },
-  // // methods: {},
-  // async mounted() {
-  //   this.selectedOwner = 'prof'
-  // },
+  components: { Card, Spacer, CheckboxContainer },
+  setup() {
+    const store = useStore()
+    const members = computed(() => store.state.members)
+    return { members }
+  },
+  computed: {
+    ...mapState(['members']),
+  },
+  methods: {
+    ...mapActions(['updateMembers']),
+  },
 })
 </script>
 
@@ -116,7 +117,16 @@ export default defineComponent({
 
 label {
   padding: 12px;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 900;
+}
+
+#members label {
+  text-transform: unset;
+  font-size: 1rem;
+  font-weight: normal;
 }
 
 p {
