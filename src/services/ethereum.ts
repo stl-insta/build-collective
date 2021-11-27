@@ -1,6 +1,5 @@
 import Web3 from 'web3'
-import BuildCollectiveInterface from '../build/contracts/BuildCollective.json'
-import ProjectFactoryInterface from '../build/contracts/ProjectFactory.json'
+import BuildCollectiveInterface from "../build/contracts/BuildCollective.json"
 
 const win: any = window
 
@@ -23,15 +22,10 @@ export const connect = async () => {
     try {
       const account = await getAccount()
       const balance = await getBalance(account)
-      const bc_abi: any = BuildCollectiveInterface.abi
-      const pf_abi: any = ProjectFactoryInterface.abi
-      const bc_address = BuildCollectiveInterface.networks['5777'].address
-      const pf_address = ProjectFactoryInterface.networks['5777'].address
-      const contracts = {
-        BuildCollective: new web3.eth.Contract(bc_abi, bc_address, { from: account }),
-        ProjectFactory: new web3.eth.Contract(pf_abi, pf_address, { from: account }),
-      }
-      return { address: account, contracts, balance }
+      const abi: any = BuildCollectiveInterface.abi
+      const address = BuildCollectiveInterface.networks['5777'].address
+      const contract = new web3.eth.Contract(abi, address, { from: account })
+      return { address: account, contract, balance }
     } catch (error) {
       console.error(error)
     }

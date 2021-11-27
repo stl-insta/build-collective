@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="home">
+  <div>
     Create project here
     <form @submit.prevent="create">
       <card
@@ -14,10 +14,17 @@
       </card>
     </form>
   </div>
-  <div class="home">
-    <ul v-for="project in projects" v-bind:key="project.name">
-      <li>{{ project.name }}</li>
-    </ul>
+  <div>
+    <div v-for="project in projects" v-bind:key="project.id">
+      <div>Id: {{ project.id }}</div>
+      <div>Name: {{ project.name }}</div>
+      <div>Balance: {{ project.balance }} token</div>
+      <div>
+        <input v-model="donations[project.id]">
+        <button @click="sponsor(project.id)">Give support</button>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -32,29 +39,37 @@ export default defineComponent({
     const store = useStore()
     const address = computed(() => store.state.account.address)
     const balance = computed(() => store.state.account.balance)
-    const contracts = computed(() => store.state.contracts)
-    return { address, contracts, balance }
+    const contract = computed(() => store.state.contract)
+    return { address, contract, balance }
   },
   data() {
     const projects: any[] = []
     const name = ""
-    return { projects, name }
+    const donations: Record<number, number> = {}
+    return { projects, name, donations }
   },
   methods: {
     async updateProjects() {
-      const { contracts } = this
-      this.projects = await contracts.ProjectFactory.methods.getProjects().call()
+      const { contract } = this
+      this.projects = await contract.methods.getProjects().call()
     },
     async create() {
-      const { contracts, name } = this
-      await contracts.ProjectFactory.methods.createProject(name).send()
+      const { contract, name } = this
+      await contract.methods.createProject(name).send()
       await this.updateProjects()
       this.name = ""
     },
+    async sponsor(id: number) {
+      const { contract, donations } = this
+      console.log(donations[id])
+      await contract.methods.sponsorProject(id, donations[id]).send()
+      await this.updateProjects()
+      this.donations[id] = 0
+    },
   },
   async mounted() {
-    const { contracts } = this
-    this.projects = await contracts.ProjectFactory.methods.getProjects().call()
+    const { contract } = this
+    this.projects = await contract.methods.getProjects().call()
   },
 })
 </script>
