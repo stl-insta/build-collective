@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="home">
-    <!-- <div class="home" v-if="company"> -->
-    <!-- <form @submit.prevent="signUp"> -->
-    <form>
+    <form @submit.prevent="create">
       <Card
         title="Enter your company information"
         subtitle="Type directly in the input and hit enter. All spaces will be converted to _"
@@ -16,51 +14,75 @@
           v-model="name"
           placeholder="Type your company name here"
         />
-        <label for="balance">Balance</label>
+        <label for="companyBalance">Balance</label>
         <input
           type="number"
           class="input"
-          id="balance"
-          v-model="balance"
+          id="companyBalance"
+          v-model="companyBalance"
           placeholder="Type your balance here (only number)"
         />
-        <!-- <label for="members">List of members</label>
-        <div id="members" :key="index" v-for="(member, index) in members">
-          <input
-            type="checkbox"
-            id="member"
-            value="member"
-            v-model="selectedMembers"
-          />
-          <label for="member">{{ member }}</label>
+        <label for="members">List of members</label>
+        <div id="members">
+          <ul v-for="user in users" :key="user">
+            <li>
+              <label>
+                <input type="checkbox" />
+                {{ user }}
+              </label>
+            </li>
+          </ul>
+          <p>Selected: {{ users }}</p>
         </div>
-        <p>Selected: {{ selectedMembers }}</p> -->
-        <CheckboxContainer :items="members" @update="updateMembers" />
-        <p>Selected: {{ members }}</p>
+        <spacer :size="24" />
+        <div class="center">
+          <input class="btn" type="submit" value="Create" />
+        </div>
+        <spacer :size="24" />
       </Card>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { useStore, mapState, mapActions } from 'vuex'
-import Card from '@/components/Card.vue'
-import Spacer from '@/components/Spacer.vue'
-import CheckboxContainer from '@/components/CheckboxContainer.vue'
+import { defineComponent, computed } from "vue"
+import { useStore } from "vuex"
+import Card from "@/components/Card.vue"
+import Spacer from "@/components/Spacer.vue"
 
 export default defineComponent({
-  components: { Card, Spacer, CheckboxContainer },
+  components: { Card, Spacer },
   setup() {
     const store = useStore()
-    const members = computed(() => store.state.members)
-    return { members }
+    const address = computed(() => store.state.account.address)
+    const balance = computed(() => store.state.account.balance)
+    const contracts = computed(() => store.state.contracts)
+    return { address, contracts, balance }
   },
-  computed: {
-    ...mapState(['members']),
+  data() {
+    const account = null
+    const name = ""
+    const companyBalance = 0
+    const users = Array<string>()
+    return { account, name, companyBalance, users }
   },
   methods: {
-    ...mapActions(['updateMembers']),
+    async updateUsers() {
+      const { contracts } = this
+      this.users = await contracts.BuildCollective.methods.getAllUsers().call()
+    },
+    async create() {
+      const { contracts, name } = this
+      await contracts.CompanyFactory.methods.createCompany(name).send()
+      await this.updateUsers()
+      this.name = ""
+    },
+  },
+  async mounted() {
+    const { address, contracts } = this
+    const account = await contracts.BuildCollective.methods.user(address).call()
+    if (account.registered) this.account = account
+    this.users = await contracts.BuildCollective.methods.getAllUsers().call()
   },
 })
 </script>
@@ -133,5 +155,10 @@ p {
   margin: 0;
   padding: 0 12px;
   font-size: 1rem;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
 }
 </style>

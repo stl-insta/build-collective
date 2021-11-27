@@ -8,14 +8,6 @@ export default createStore({
       address: null,
       balance: 0,
     },
-    // members: [
-    //   { id: 1, name: 'wlin', selected: true },
-    //   { id: 2, name: 'mamy', selected: true },
-    //   { id: 3, name: 'prof', selected: false },
-    //   { id: 4, name: 'leo', selected: false },
-    //   { id: 5, name: 'ale', selected: false },
-    // ],
-    members: [],
   },
   mutations: {
     updateEthereum(state, { address, contracts, balance }) {
@@ -31,10 +23,6 @@ export default createStore({
         const { address, contracts, balance } = response
         context.commit('updateEthereum', { address, contracts, balance })
       }
-    },
-    updateMembers({ commit }, items) {
-      console.log('store', items)
-      commit('updateMembers', items)
     },
   },
   modules: {},

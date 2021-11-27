@@ -10,6 +10,7 @@ contract BuildCollective is Ownable {
     bool registered;
   }
 
+  address[] public listUser; 
   mapping(address => User) public users;
 
   event UserSignedUp(address indexed userAddress, User indexed user);
@@ -18,10 +19,15 @@ contract BuildCollective is Ownable {
     return users[userAddress];
   }
 
+  function getAllUsers() external view returns (address[] memory) {
+    return listUser;
+  }
+
   function signUp(string memory username) public returns (User memory) {
     require(bytes(username).length > 0);
     users[msg.sender] = User(username, 0, true);
     emit UserSignedUp(msg.sender, users[msg.sender]);
+    listUser.push(msg.sender);
     return users[msg.sender];
   }
 
