@@ -117,11 +117,6 @@ export default defineComponent({
       await contract.methods.createFix(id, this.fixPropositions[id]).send()
       await this.updateBounties()
     },
-    async accept(id: number) {
-      const { contract } = this
-      await contract.methods.acceptFix(id).send()
-      await this.updateBounties()
-    },
   },
   async mounted() {
     const { contract } = this

@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/bounty/create/:id',
-    name: 'Bounty',
+    name: 'BountyCreate',
     component: () => import('@/views/Bounty.vue'),
   },
   {

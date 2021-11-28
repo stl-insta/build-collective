@@ -47,8 +47,9 @@
           </table>
         </div>
       </div>
-      <div v-if="bounty.status == 0">
+      <div class="label" v-if="bounty.status == 0">
         This bounty is fixed, you can no longer propose a fix
+        <Spacer :size="24" />
       </div>
     </Card>
   </div>
@@ -96,6 +97,11 @@ export default defineComponent({
       await contract.methods
         .createFix(bounty.id, this.fixPropositions[bounty.id])
         .send()
+      await this.updateBounty()
+    },
+    async accept(id: number) {
+      const { contract } = this
+      await contract.methods.acceptFix(id).send()
       await this.updateBounty()
     },
   },
