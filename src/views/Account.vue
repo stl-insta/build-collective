@@ -71,13 +71,10 @@ export default defineComponent({
       const { contract, address } = this
       const fee: string = await contract.methods.getTopUpFee(this.amount).call()
       const wei = Web3.utils.toWei(fee, "ether")
-      const res = await contract.methods
-        .addBalance(this.amount)
-        .send({
-          from: address,
-          value: +wei
-        })
-      console.log(res)
+      await contract.methods.addBalance(this.amount).send({
+        from: address,
+        value: +wei,
+      })
       await this.updateAccount()
     },
   },
