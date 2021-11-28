@@ -22,16 +22,12 @@
         :gradient="true"
       >
         <div class="explanations">
-          This data has been fetched from the blockchain. You started by
-          connecting MetaMask, and you fetched your data by reading the
-          blockchain. Try to modify the code to see what's happening!
+          1 eth = 200 tokens
         </div>
         <div class="explanations">
-          On your account on the contract, you have
-          {{ account.balance }} tokens. If you click
-          <button class="button-link" @click="addTokens">here</button>, you can
-          add some token to your account. Just give it a try! And think to put
-          an eye on Ganache!
+          <label>Top up your account with :</label>
+          <input type="number" v-model="amount">
+          <button @click="addTokens">Credit</button>
         </div>
       </card>
     </div>
@@ -39,9 +35,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { useStore } from 'vuex'
-import Card from '@/components/Card.vue'
+import { defineComponent, computed } from "vue"
+import { useStore } from "vuex"
+import Card from "@/components/Card.vue"
+import Web3 from "web3"
 
 export default defineComponent({
   components: { Card },
@@ -54,8 +51,9 @@ export default defineComponent({
   },
   data() {
     const account = null
-    const username = ''
-    return { account, username }
+    const username = ""
+    const amount = 200
+    return { account, username, amount }
   },
   methods: {
     async updateAccount() {
@@ -64,14 +62,22 @@ export default defineComponent({
     },
     async signUp() {
       const { contract, username } = this
-      const name = username.trim().replace(/ /g, '_')
+      const name = username.trim().replace(/ /g, "_")
       await contract.methods.signUp(name).send()
       await this.updateAccount()
-      this.username = ''
+      this.username = ""
     },
     async addTokens() {
-      const { contract } = this
-      await contract.methods.addBalance(200).send()
+      const { contract, address } = this
+      const fee: string = await contract.methods.getTopUpFee(this.amount).call()
+      const wei = Web3.utils.toWei(fee, "ether")
+      const res = await contract.methods
+        .addBalance(this.amount)
+        .send({
+          from: address,
+          value: +wei
+        })
+      console.log(res)
       await this.updateAccount()
     },
   },
