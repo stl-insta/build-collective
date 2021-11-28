@@ -94,3 +94,21 @@ Implement an OpenCollective from scratch in Solidity.
     - Create bounty (only owner)
     - Accept a fix (only owner)
     - Propose a fix
+
+# Screenshot
+## Home
+![image](https://user-images.githubusercontent.com/28400679/143787353-bab97531-e313-4a47-9e5c-9d30ce53b455.png)
+## Account
+![image](https://user-images.githubusercontent.com/28400679/143787383-bb61a65c-6fb2-4c55-b013-f40aac007477.png)
+## Company
+![image](https://user-images.githubusercontent.com/28400679/143787427-a77ac69f-3f9f-4bf1-a89c-1c3db146373f.png)
+## Company details
+![image](https://user-images.githubusercontent.com/28400679/143787462-4e8e5f39-9858-4b06-9538-f3bd796ec9c8.png)
+## Project
+![image](https://user-images.githubusercontent.com/28400679/143787486-87351c5e-d3ec-4bcb-9c3e-f9c085bfdc4b.png)
+## Project Details
+![image](https://user-images.githubusercontent.com/28400679/143787518-f21ecd5b-0620-449d-95b4-a182cbe03f9e.png)
+## Bounty
+![image](https://user-images.githubusercontent.com/28400679/143787549-2c1bc8b6-5ce4-4064-b45e-cba61f06614f.png)
+## Bounty Details
+![image](https://user-images.githubusercontent.com/28400679/143787612-bc7b3b7e-e5dd-4d23-b3ba-775d221f981c.png)
