@@ -33,7 +33,7 @@
         <button @click="sponsor(project.id)">Give support</button>
       </div>
       <spacer :size="24" />
-      <div>
+      <div v-if="project.balance > 0">
         <label>You can create a bounty for this project</label>
         <button
           @click="
@@ -42,6 +42,9 @@
         >
           Create Bounty
         </button>
+      </div>
+      <div v-if="project.balance == 0">
+        Your project does not have enough balance to create a Bounty
       </div>
     </div>
   </div>
