@@ -163,24 +163,32 @@ contract BuildCollective is Ownable {
     mapping(uint => address[]) companyToMembers;
 
     struct Company {
+        uint id;
         string name;
         address owner;
+        uint balance;
     }
 
     Company[] private companies;
 
-    event NewCompany(uint companyId, string name);
+    event NewCompany(uint companyId, string name, uint balance);
     event NewCompanyMember(uint companyId, address user);
 
-    function createCompany(string memory _name)
+    function createCompany(string memory _name, uint _balance)
     public
     {
-        companies.push(Company(_name, msg.sender));
-        uint id = companies.length - 1;
+        uint id = companies.length;
+        companies.push(Company(id, _name, msg.sender, _balance));
 
-        emit NewCompany(id, _name);
+        emit NewCompany(id, _name, _balance);
     }
 
+    function getCompany(uint id)
+    external view
+    returns (Company memory){
+        return companies[id];
+    }
+    
     function getCompanies()
     external view
     returns (Company[] memory)
