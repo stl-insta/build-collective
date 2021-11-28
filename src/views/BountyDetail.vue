@@ -14,7 +14,7 @@
           {{ bountyProject.name }}
         </router-link>
       </p>
-      <div>
+      <div v-if="bounty.status == 1">
         <p class="label">You can propose a fix for this bounty</p>
         <div class="center">
           <input
@@ -27,19 +27,28 @@
           </button>
         </div>
         <Spacer :size="24" />
+        <label>List of all proposed fix</label>
+        <div class="p-4">
+          <table v-if="fixesOfBounty">
+            <tr>
+              <th>Proposition</th>
+              <th>Owner</th>
+              <th>Action</th>
+            </tr>
+            <tr v-for="fix in fixesOfBounty" v-bind:key="fix.id">
+              <td>{{ fix.proposition }}</td>
+              <td>{{ fix.owner }}</td>
+              <td>
+                <button class="btn btn-secondary" @click="accept(fix.id)">
+                  Accept this fix
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
-      <label>List of all proposed fix</label>
-      <div class="p-4">
-        <table v-if="fixesOfBounty">
-          <tr>
-            <th>Proposition</th>
-            <th>Owner</th>
-          </tr>
-          <tr v-for="fix in fixesOfBounty" v-bind:key="fix.id">
-            <td>{{ fix.proposition }}</td>
-            <td>{{ fix.owner }}</td>
-          </tr>
-        </table>
+      <div v-if="bounty.status == 0">
+        This bounty is fixed, you can no longer propose a fix
       </div>
     </Card>
   </div>

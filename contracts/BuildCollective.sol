@@ -12,8 +12,10 @@ contract BuildCollective is Ownable {
 
     address[] public listUser; 
     mapping(address => User) public users;
+    uint fees = 200; // 1 ether = fees tokens
 
     event UserSignedUp(address indexed userAddress, User indexed user);
+    event TopUp(uint amount, uint fee);
 
     function user(address userAddress) public view returns (User memory) {
         return users[userAddress];
@@ -31,13 +33,41 @@ contract BuildCollective is Ownable {
         return users[msg.sender];
     }
 
-    function addBalance(uint256 amount) public returns (bool) {
+    // Set current fees
+    // 1 ether = fees token
+    function setFees(uint _fees)
+    public
+    restricted
+    {
+        require(msg.sender == owner);
+        require(_fees > 0);
+        fees = _fees;
+    }
+
+    function getTopUpFee(uint token)
+    public view
+    returns (uint)
+    {
+        require(token > 0);
+        return token / fees;
+    }
+
+    function addBalance(uint256 amount)
+    external payable
+    returns (bool) {
+        uint fee = getTopUpFee(amount);
         require(users[msg.sender].registered);
+        require(msg.value >= fee);
+
+        emit TopUp(msg.value, fee);
+
         users[msg.sender].balance += amount;
         return true;
     }
 
-    function withdrawBalance(uint256 _amount) public returns (bool) {
+    function withdrawBalance(uint256 _amount)
+    public
+    returns (bool) {
         require(users[msg.sender].registered);
         users[msg.sender].balance -= _amount;
         return true;

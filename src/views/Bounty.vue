@@ -34,6 +34,7 @@
         <th>Id</th>
         <th>Name</th>
         <th>Reward</th>
+        <th>Status</th>
         <th>Project Name</th>
       </tr>
       <tr v-for="bounty in bounties" v-bind:key="bounty.id">
@@ -44,6 +45,7 @@
           </router-link>
         </td>
         <td>{{ bounty.reward }} token</td>
+        <td>{{ bounty.status == 1 ? "In Progress" : "Fixed" }}</td>
         <td>
           <router-link
             class="link"
@@ -104,14 +106,20 @@ export default defineComponent({
         this.bountiesProject[bounty.id] = await contract.methods
           .getProjectOfBounty(bounty.id)
           .call()
-        this.fixesOfBounty[bounty.id] = await contract.methods
-          .getFixesOfBounty(bounty.id)
-          .call()
+        const fixes = await contract.methods.getFixesOfBounty(bounty.id).call()
+        this.fixesOfBounty[bounty.id] = fixes.filter(
+          (f: any) => f.proposition !== ""
+        )
       }
     },
     async createFixForBounty(id: number) {
       const { contract } = this
       await contract.methods.createFix(id, this.fixPropositions[id]).send()
+      await this.updateBounties()
+    },
+    async accept(id: number) {
+      const { contract } = this
+      await contract.methods.acceptFix(id).send()
       await this.updateBounties()
     },
   },

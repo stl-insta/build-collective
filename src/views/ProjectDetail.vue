@@ -21,12 +21,15 @@
         </div>
       </div>
       <Spacer :size="24" />
-      <div>
+      <div v-if="project.balance > 0">
         <p class="label">You can also create a bounty</p>
         <div class="center">
           <router-link class="btn" :to="`/bounty/create/${project.id}`">
             Create Bounty
           </router-link>
+        </div>
+        <div v-if="project.balance == 0">
+          Your project does not have enough balance to create a Bounty
         </div>
         <Spacer :size="24" />
       </div>
