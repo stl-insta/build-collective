@@ -7,7 +7,7 @@
       >
         <input
           type="text"
-          class="input-username"
+          class="input"
           v-model="username"
           placeholder="Type your username here"
         />
@@ -21,13 +21,15 @@
         :subtitle="`${balance} Ξ\t\t${account.balance} Tokens`"
         :gradient="true"
       >
-        <div class="explanations">
-          1 eth = 200 tokens
-        </div>
+        <div class="explanations">1 eth = 200 tokens</div>
         <div class="explanations">
           <label>Top up your account with :</label>
-          <input type="number" v-model="amount">
-          <button @click="addTokens">Credit</button>
+          <input type="number" v-model="amount" />
+          <Spacer :size="24" />
+          <div class="center">
+            <button class="btn" @click="addTokens">Credit</button>
+          </div>
+          <Spacer :size="24" />
         </div>
       </card>
     </div>
@@ -38,10 +40,11 @@
 import { defineComponent, computed } from "vue"
 import { useStore } from "vuex"
 import Card from "@/components/Card.vue"
+import Spacer from "@/components/Spacer.vue"
 import Web3 from "web3"
 
 export default defineComponent({
-  components: { Card },
+  components: { Card, Spacer },
   setup() {
     const store = useStore()
     const address = computed(() => store.state.account.address)
@@ -116,8 +119,8 @@ export default defineComponent({
   cursor: pointer;
 }
 
-.input-username {
-  background: transparent;
+.input {
+  background: #1e1922;
   border: none;
   padding: 12px;
   outline: none;
@@ -125,5 +128,25 @@ export default defineComponent({
   color: white;
   font-family: inherit;
   font-size: 1.3rem;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  background-color: rgb(89, 25, 138);
+  border: none;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 6px;
 }
 </style>

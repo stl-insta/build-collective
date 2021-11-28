@@ -98,7 +98,7 @@ export default defineComponent({
 }
 
 .input {
-  background: transparent;
+  background: #1e1922;
   border: none;
   padding: 12px;
   outline: none;

@@ -11,6 +11,7 @@
           v-model="name"
           placeholder="Type your project name here"
         />
+        <Spacer :size="24" />
         <div class="center">
           <input class="btn" type="submit" value="Create" />
         </div>
@@ -87,7 +88,7 @@ export default defineComponent({
 }
 
 .input {
-  background: transparent;
+  background: #1e1922;
   border: none;
   padding: 12px;
   outline: none;
