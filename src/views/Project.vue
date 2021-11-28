@@ -57,7 +57,7 @@ export default defineComponent({
   },
   data() {
     const projects: any[] = []
-    const name = "My Project"
+    const name = ""
     return { projects, name }
   },
   methods: {

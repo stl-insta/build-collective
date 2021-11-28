@@ -70,7 +70,7 @@ export default defineComponent({
   },
   data() {
     const account = null
-    const name = "My Company"
+    const name = ""
     const companyBalance = 0
     const users = Array<string>()
     const companies = Array<string>()

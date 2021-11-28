@@ -76,7 +76,7 @@ export default defineComponent({
     return { address, contract, balance }
   },
   data() {
-    const name = "Fix me if you can"
+    const name = ""
     const reward = 10
     const project: any = null
     const bounties: any[] = []

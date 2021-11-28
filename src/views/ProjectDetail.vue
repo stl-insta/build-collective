@@ -54,21 +54,14 @@ export default defineComponent({
   },
   data() {
     const project: any = []
-    const name = "My Project"
     const donations: Record<number, number> = {}
-    return { project, name, donations }
+    return { project, donations }
   },
   methods: {
     async updateProject() {
       const { contract, project, donations } = this
       this.project = await contract.methods.getProject(project.id).call()
       donations[project.id] = 10
-    },
-    async create() {
-      const { contract, name } = this
-      await contract.methods.createProject(name).send()
-      await this.updateProject()
-      this.name = ""
     },
     async sponsor(id: number) {
       const { contract, donations } = this
