@@ -10,6 +10,7 @@
           class="input"
           v-model="name"
           placeholder="Type your project name here"
+          required="required"
         />
         <Spacer :size="24" />
         <div class="center">

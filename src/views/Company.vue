@@ -13,6 +13,7 @@
           id="name"
           v-model="name"
           placeholder="Type your company name here"
+          required="required"
         />
         <label for="companyBalance">Balance</label>
         <input

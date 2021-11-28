@@ -179,6 +179,7 @@ contract BuildCollective is Ownable {
     {
         uint id = companies.length;
         companies.push(Company(id, _name, msg.sender, _balance));
+        withdrawBalance(_balance);
 
         emit NewCompany(id, _name, _balance);
     }

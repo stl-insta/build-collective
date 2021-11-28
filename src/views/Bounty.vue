@@ -10,6 +10,7 @@
           id="name"
           v-model="name"
           placeholder="Type your bounty name here"
+          required="required"
         />
         <label for="reward">Reward</label>
         <input
