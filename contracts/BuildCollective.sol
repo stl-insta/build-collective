@@ -251,4 +251,10 @@ contract BuildCollective is Ownable {
     {
         return bounties;
     }
+
+    function getProjectOfBounty(uint bountyId)
+    external view
+    returns (Project memory) {
+        return projects[bountyToProject[bountyId]];
+    }
 }

@@ -37,6 +37,10 @@
       <div>Id: {{ bounty.id }}</div>
       <div>Name: {{ bounty.name }}</div>
       <div>Reward: {{ bounty.reward }} token</div>
+      <div>
+        <div>Project name: {{ bountiesProject[bounty.id].name }}</div>
+        <div>Project id: {{ bountiesProject[bounty.id].id }}</div>
+      </div>
       <spacer :size="24" />
       <div>
         <label>You can propose a fix for this bounty</label>
@@ -67,7 +71,8 @@ export default defineComponent({
     const reward = 10
     const project: any = null
     const bounties: any[] = []
-    return { name, reward, project, bounties }
+    const bountiesProject: Record<number, any> = {}
+    return { name, reward, project, bounties, bountiesProject }
   },
   methods: {
     async create() {
@@ -79,6 +84,9 @@ export default defineComponent({
     async updateBounties() {
       const { contract } = this
       this.bounties = await contract.methods.getBounties().call()
+      for (const bounty of this.bounties) {
+        this.bountiesProject[bounty.id] = await contract.methods.getProjectOfBounty(bounty.id).call()
+      }
     },
   },
   async mounted() {
