@@ -6,20 +6,20 @@
     </router-link>
     <div class="navbar-items" v-if="store.state.account.address">
       <router-link to="/account" class="navbar-item">Account</router-link>
-    </div>
-    <div class="navbar-items" v-if="store.state.account.address">
+      <router-link to="/company" class="navbar-item">Companies</router-link>
       <router-link to="/project" class="navbar-item">Projects</router-link>
+      <router-link to="/bounty" class="navbar-item">Bounties</router-link>
     </div>
   </nav>
   <router-view />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent } from "vue"
+import { useStore } from "vuex"
 
 export default defineComponent({
-  name: 'App',
+  name: "App",
   setup() {
     const store = useStore()
     return { store }

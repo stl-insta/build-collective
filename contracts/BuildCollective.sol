@@ -254,6 +254,13 @@ contract BuildCollective is Ownable {
         bounties[bountyId].status = BountyStatus.Fixed;
     }
 
+    function getBounty(uint id)
+    external view
+    returns (Bounty memory)
+    {
+        return bounties[id];
+    }
+
     function getBounties()
     external view
     returns (Bounty[] memory)

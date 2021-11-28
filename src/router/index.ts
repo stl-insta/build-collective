@@ -29,14 +29,24 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Project.vue'),
   },
   {
+    path: '/project/:id',
+    name: 'ProjectDetail',
+    component: () => import('@/views/ProjectDetail.vue'),
+  },
+  {
     path: '/bounty/create/:id',
-    name: 'CreateBounty',
+    name: 'Bounty',
     component: () => import('@/views/Bounty.vue'),
   },
   {
     path: '/bounty',
     name: 'Bounty',
     component: () => import('@/views/Bounty.vue'),
+  },
+  {
+    path: '/bounty/:id',
+    name: 'BountyDetail',
+    component: () => import('@/views/BountyDetail.vue'),
   },
 ]
 

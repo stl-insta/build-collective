@@ -9,7 +9,7 @@
       <div class="label">Owner :</div>
       <p>{{ company.owner }}</p>
       <div class="label">Balance :</div>
-      <p>{{ company.balance }}</p>
+      <p>{{ company.balance }} tokens</p>
       <div class="label">List of members</div>
       <div v-if="members.length > 0" id="members">
         <ul v-for="member in members" :key="member">
@@ -21,7 +21,9 @@
       <p v-else>No member in this company, you can add</p>
       <Spacer :size="24" />
       <div class="center">
-        <button class="btn" @click="toggle = !toggle">Add Members</button>
+        <button class="btn btn-secondary" @click="toggle = !toggle">
+          Add Members
+        </button>
       </div>
       <form v-show="toggle" @submit.prevent="addMember(company.id, users)">
         <Spacer :size="24" />
@@ -149,5 +151,12 @@ form ul {
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 6px;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid rgb(114, 53, 161);
+  padding: 0.5rem;
+  color: rgb(114, 53, 161);
 }
 </style>

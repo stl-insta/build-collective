@@ -1,6 +1,6 @@
 <template>
   <div class="home-wrapper">
-    <card
+    <Card
       v-if="!address"
       title="It looks like you're not connected."
       subtitle="Please connect to use the app."
@@ -9,57 +9,55 @@
       <collective-button :transparent="true" @click="connect">
         Connect
       </collective-button>
-      <!-- <hr style="border: 1px solid rgb(57 53 132)" />
-      <collective-button
-        class="border-b"
-        :transparent="true"
-        @click="connectCompany"
-      >
-        Connect with an Company Account
-      </collective-button> -->
-    </card>
-    <card title="You're connected!" subtitle="Hooray" :blue="true" v-else>
+    </Card>
+    <Card title="You're connected!" subtitle="Hooray" :blue="true" v-else>
       <collective-button :transparent="true" @click="goToAccount">
         Go to account
       </collective-button>
-    </card>
-    <spacer :size="24" />
+    </Card>
+    <Spacer :size="24" />
+    <p>Connect to have access</p>
     <div class="home">
-      <card title="Open Company Account" subtitle="Attach to Company">
+      <Card title="Company Account" subtitle="Attach to Company">
         <router-link to="/company" class="card-body">Go it</router-link>
-      </card>
-      <card title="View all Projects" subtitle="Support your preferred project">
+      </Card>
+      <Card title="View all Projects" subtitle="Support your preferred project">
         <router-link to="/project" class="card-body">Go it</router-link>
-      </card>
-      <card title="View all Bounties" subtitle="Get rewarded for fixing bugs">
+      </Card>
+      <Card title="View all Bounties" subtitle="Get rewarded for fixing bugs">
         <router-link to="/bounty" class="card-body">Go it</router-link>
-      </card>
-      <card
+      </Card>
+    </div>
+    <Spacer :size="24" />
+    <hr />
+    <Spacer :size="24" />
+    <div class="home">
+      <Card
         v-for="(link, index) in links"
         :key="index"
         :title="link.title"
         subtitle="To never be lost"
       >
         <a class="card-body" :href="link.link"> Find it here </a>
-      </card>
+      </Card>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { useStore } from 'vuex'
-import Card from '@/components/Card.vue'
-import CollectiveButton from '@/components/CollectiveButton.vue'
-import Spacer from '@/components/Spacer.vue'
+import { defineComponent, computed } from "vue"
+import { useStore } from "vuex"
+import Card from "@/components/Card.vue"
+import CollectiveButton from "@/components/CollectiveButton.vue"
+import Spacer from "@/components/Spacer.vue"
 
 export default defineComponent({
-  name: 'SignIn',
+  name: "SignIn",
   components: { Card, CollectiveButton, Spacer },
   setup() {
     const store = useStore()
     const address = computed(() => store.state.account.address)
-    const connect = () => store.dispatch('ethereumConnect')
+    const connect = () => store.dispatch("ethereumConnect")
     return { address, connect }
   },
   computed: {
@@ -68,29 +66,29 @@ export default defineComponent({
         const title = `${title_} Documentation`
         return { title, link }
       }
-      const vue = 'https://v3.vuejs.org/guide/introduction.html'
-      const vuex = 'https://vuex.vuejs.org/fr/api/'
-      const web3 = 'https://web3js.readthedocs.io/en/v1.2.11/index.html'
-      const solidity = 'https://docs.soliditylang.org/en/v0.8.9/'
-      const metamask = 'https://docs.metamask.io/guide/'
-      const gridGarden = 'https://cssgridgarden.com/'
-      const flexboxFroggy = 'https://flexboxfroggy.com/'
-      const mdn = 'https://developer.mozilla.org/fr/'
+      const vue = "https://v3.vuejs.org/guide/introduction.html"
+      const vuex = "https://vuex.vuejs.org/fr/api/"
+      const web3 = "https://web3js.readthedocs.io/en/v1.2.11/index.html"
+      const solidity = "https://docs.soliditylang.org/en/v0.8.9/"
+      const metamask = "https://docs.metamask.io/guide/"
+      const gridGarden = "https://cssgridgarden.com/"
+      const flexboxFroggy = "https://flexboxfroggy.com/"
+      const mdn = "https://developer.mozilla.org/fr/"
       return [
-        link('Vue.js', vue),
-        link('Vuex', vuex),
-        link('Web3', web3),
-        link('Solidity', solidity),
-        link('MetaMask', metamask),
-        { title: 'MDN', link: mdn },
-        { title: 'Flexbox Froggy', link: flexboxFroggy },
-        { title: 'Grid Garden', link: gridGarden },
+        link("Vue.js", vue),
+        link("Vuex", vuex),
+        link("Web3", web3),
+        link("Solidity", solidity),
+        link("MetaMask", metamask),
+        { title: "MDN", link: mdn },
+        { title: "Flexbox Froggy", link: flexboxFroggy },
+        { title: "Grid Garden", link: gridGarden },
       ]
     },
   },
   methods: {
     goToAccount() {
-      this.$router.push({ name: 'Account' })
+      this.$router.push({ name: "Account" })
     },
   },
 })

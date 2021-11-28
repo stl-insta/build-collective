@@ -5,7 +5,7 @@
         title="Enter your company information"
         subtitle="Type directly in the input and hit enter. All spaces will be converted to _"
       >
-        <spacer :size="24" />
+        <Spacer :size="24" />
         <label for="name">Company name</label>
         <input
           type="text"
@@ -22,11 +22,11 @@
           v-model="companyBalance"
           placeholder="Type your balance here (only number)"
         />
-        <spacer :size="24" />
+        <Spacer :size="24" />
         <div class="center">
           <input class="btn" type="submit" value="Create" />
         </div>
-        <spacer :size="24" />
+        <Spacer :size="24" />
       </Card>
     </form>
 
@@ -46,7 +46,7 @@
           </router-link>
         </td>
         <td>{{ company.owner }}</td>
-        <td>{{ company.balance }}</td>
+        <td>{{ company.balance }} token</td>
       </tr>
     </table>
   </div>
