@@ -28,6 +28,12 @@
       <card title="Open Company Account" subtitle="Attach to Company">
         <router-link to="/company" class="card-body">Go it</router-link>
       </card>
+      <card title="View all Projects" subtitle="Support your preferred project">
+        <router-link to="/project" class="card-body">Go it</router-link>
+      </card>
+      <card title="View all Bounties" subtitle="Get rewarded for fixing bugs">
+        <router-link to="/bounty" class="card-body">Go it</router-link>
+      </card>
       <card
         v-for="(link, index) in links"
         :key="index"

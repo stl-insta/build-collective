@@ -11,13 +11,11 @@
           v-model="name"
           placeholder="Type your project name here"
         />
+        <div class="center">
+          <input class="btn" type="submit" value="Create" />
+        </div>
       </card>
     </form>
-  </div>
-  <spacer :size="24" />
-  <div>
-    <label>You can create a bounty for a project</label>
-    <button @click="$router.push({ name: 'bounty' })">Create Bounty</button>
   </div>
   <spacer :size="24" />
   <div>
@@ -33,6 +31,17 @@
         <input v-model="donations[project.id]">
         <label>tokens</label>
         <button @click="sponsor(project.id)">Give support</button>
+      </div>
+      <spacer :size="24" />
+      <div>
+        <label>You can create a bounty for this project</label>
+        <button
+          @click="
+            $router.push({ name: 'CreateBounty', params: { id: project.id } })
+          "
+        >
+          Create Bounty
+        </button>
       </div>
     </div>
   </div>

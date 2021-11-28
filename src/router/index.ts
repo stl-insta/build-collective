@@ -23,6 +23,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Project',
     component: () => import('@/views/Project.vue'),
   },
+  {
+    path: '/bounty/create/:id',
+    name: 'CreateBounty',
+    component: () => import('@/views/Bounty.vue'),
+  },
+  {
+    path: '/bounty',
+    name: 'Bounty',
+    component: () => import('@/views/Bounty.vue'),
+  },
 ]
 
 const router = createRouter({
