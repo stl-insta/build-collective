@@ -205,6 +205,7 @@ contract BuildCollective is Ownable {
     }
 
     struct Fix {
+        uint id;
         address owner;
         string proposition;
     }
@@ -227,8 +228,8 @@ contract BuildCollective is Ownable {
 
     function createFix(uint _bountyId, string calldata _proposition)
     external {
-        fixes.push(Fix(msg.sender, _proposition));
         uint id = fixes.length;
+        fixes.push(Fix(id, msg.sender, _proposition));
 
         fixToBounty[id] = _bountyId;
 
@@ -258,5 +259,24 @@ contract BuildCollective is Ownable {
     returns (Bounty[] memory)
     {
         return bounties;
+    }
+
+    function getProjectOfBounty(uint bountyId)
+    external view
+    returns (Project memory) {
+        return projects[bountyToProject[bountyId]];
+    }
+
+    function getFixesOfBounty(uint bountyId)
+    external view
+    returns (Fix[] memory) {
+        uint len = fixes.length;
+        Fix[] memory list = new Fix[](len);
+        for(uint i=0; i < len; i++){
+            if(fixToBounty[i] == bountyId) {
+                list[i] = fixes[i];
+            }
+        }
+        return list;
     }
 }

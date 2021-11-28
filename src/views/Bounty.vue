@@ -37,10 +37,23 @@
       <div>Id: {{ bounty.id }}</div>
       <div>Name: {{ bounty.name }}</div>
       <div>Reward: {{ bounty.reward }} token</div>
+      <div v-if="bountiesProject[bounty.id]">
+        <div>Project name: {{ bountiesProject[bounty.id].name }}</div>
+        <div>Project id: {{ bountiesProject[bounty.id].id }}</div>
+      </div>
       <spacer :size="24" />
       <div>
         <label>You can propose a fix for this bounty</label>
-        <button @click="$router.push({ name: 'fix' })">Propose Fix</button>
+        <input type="text" v-model="fixPropositions[bounty.id]" placeholder="What's your solution">
+        <button @click="createFixForBounty(bounty.id)">Propose Fix</button>
+      </div>
+      <label>List of all proposed fix</label>
+      <div v-if="fixesOfBounty[bounty.id]">
+        <div v-for="fix in fixesOfBounty[bounty.id]"
+             v-bind:key="fix">
+          <div>Proposition: {{ fix.proposition }}</div>
+          <div>Owner: {{ fix.owner }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -67,7 +80,18 @@ export default defineComponent({
     const reward = 10
     const project: any = null
     const bounties: any[] = []
-    return { name, reward, project, bounties }
+    const bountiesProject: Record<number, any> = {}
+    const fixPropositions: Record<number, any> = {}
+    const fixesOfBounty: Record<number, any[]> = {}
+    return {
+      name,
+      reward,
+      project,
+      bounties,
+      bountiesProject,
+      fixPropositions,
+      fixesOfBounty,
+    }
   },
   methods: {
     async create() {
@@ -79,6 +103,15 @@ export default defineComponent({
     async updateBounties() {
       const { contract } = this
       this.bounties = await contract.methods.getBounties().call()
+      for (const bounty of this.bounties) {
+        this.bountiesProject[bounty.id] = await contract.methods.getProjectOfBounty(bounty.id).call()
+        this.fixesOfBounty[bounty.id] = await contract.methods.getFixesOfBounty(bounty.id).call()
+      }
+    },
+    async createFixForBounty(id: number) {
+      const { contract } = this
+      await contract.methods.createFix(id, this.fixPropositions[id]).send()
+      await this.updateBounties()
     },
   },
   async mounted() {
