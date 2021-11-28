@@ -116,7 +116,8 @@ export default defineComponent({
       this.bounties = await contract.methods.getBounties().call()
       for (const bounty of this.bounties) {
         this.bountiesProject[bounty.id] = await contract.methods.getProjectOfBounty(bounty.id).call()
-        this.fixesOfBounty[bounty.id] = await contract.methods.getFixesOfBounty(bounty.id).call()
+        const fixes = await contract.methods.getFixesOfBounty(bounty.id).call()
+        this.fixesOfBounty[bounty.id] = fixes.filter((f: any) => f.proposition !== "")
       }
     },
     async createFixForBounty(id: number) {
