@@ -190,6 +190,7 @@ contract BuildCollective is Ownable {
     }
 
     struct Bounty {
+        uint id;
         string name;
         uint reward;
         BountyStatus status;
@@ -204,12 +205,12 @@ contract BuildCollective is Ownable {
     external
     {
         // Project has balance
-        require(projects[_projectId].balance >= _reward);
+        require(projects[_projectId].balance >= _reward, "Project does not have enough balance");
 
         projects[_projectId].balance -= _reward;
 
-        bounties.push(Bounty(_name, _reward, BountyStatus.InProgress));
-        uint id = bounties.length - 1;
+        uint id = bounties.length;
+        bounties.push(Bounty(id, _name, _reward, BountyStatus.InProgress));
 
         bountyToProject[id] = _projectId;
 
@@ -242,5 +243,12 @@ contract BuildCollective is Ownable {
 
         users[fixes[_fixId].owner].balance += bounties[bountyId].reward;
         bounties[bountyId].status = BountyStatus.Fixed;
+    }
+
+    function getBounties()
+    external view
+    returns (Bounty[] memory)
+    {
+        return bounties;
     }
 }

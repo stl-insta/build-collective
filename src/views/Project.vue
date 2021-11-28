@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    Create project here
+    Give your project a name
     <form @submit.prevent="create">
       <card
         title="Project name"
@@ -14,16 +14,26 @@
       </card>
     </form>
   </div>
+  <spacer :size="24" />
   <div>
-    <div v-for="project in projects" v-bind:key="project.id">
+    <label>You can create a bounty for a project</label>
+    <button @click="$router.push({ name: 'bounty' })">Create Bounty</button>
+  </div>
+  <spacer :size="24" />
+  <div>
+    <div
+      class="project-item"
+      v-for="project in projects"
+      v-bind:key="project.id"
+    >
       <div>Id: {{ project.id }}</div>
       <div>Name: {{ project.name }}</div>
       <div>Balance: {{ project.balance }} token</div>
       <div>
         <input v-model="donations[project.id]">
+        <label>tokens</label>
         <button @click="sponsor(project.id)">Give support</button>
       </div>
-
     </div>
   </div>
 </template>
@@ -32,9 +42,10 @@
 import { defineComponent, computed } from "vue"
 import { useStore } from "vuex"
 import Card from "@/components/Card.vue"
+import Spacer from "@/components/Spacer.vue"
 
 export default defineComponent({
-  components: { Card },
+  components: { Card, Spacer },
   setup() {
     const store = useStore()
     const address = computed(() => store.state.account.address)
@@ -44,14 +55,15 @@ export default defineComponent({
   },
   data() {
     const projects: any[] = []
-    const name = ""
+    const name = "My Project"
     const donations: Record<number, number> = {}
     return { projects, name, donations }
   },
   methods: {
     async updateProjects() {
-      const { contract } = this
+      const { contract, donations } = this
       this.projects = await contract.methods.getProjects().call()
+      this.projects.forEach(p => (donations[p.id] = 10))
     },
     async create() {
       const { contract, name } = this
@@ -61,15 +73,12 @@ export default defineComponent({
     },
     async sponsor(id: number) {
       const { contract, donations } = this
-      console.log(donations[id])
       await contract.methods.sponsorProject(id, donations[id]).send()
       await this.updateProjects()
-      this.donations[id] = 0
     },
   },
   async mounted() {
-    const { contract } = this
-    this.projects = await contract.methods.getProjects().call()
+    await this.updateProjects()
   },
 })
 </script>
@@ -113,5 +122,10 @@ export default defineComponent({
   color: white;
   font-family: inherit;
   font-size: 1.3rem;
+}
+
+.project-item {
+  border: 1px solid white;
+  padding: 5px;
 }
 </style>
